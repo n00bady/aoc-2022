@@ -8,49 +8,56 @@ import (
 	"strings"
 )
 
+func appendParentSums(dirSums *map[string]int, path []string, filesize int) {
+	for len(path) > 0 {
+		(*dirSums)[strings.Join(path, "/")] += filesize
+		path = path[:len(path)-1]
+	}
+}
+
 func solve() (int, int) {
 	file, _ := os.Open("input.txt")
 	scanner := bufio.NewScanner(file)
 
-	var cur []string
+	var path []string
 	dirSums := make(map[string]int)
 
 	for scanner.Scan() {
 		line := strings.Split(scanner.Text(), " ")
 
-		if filesize, err := strconv.Atoi(line[0]); err == nil {
-			tmp := make([]string, len(cur))
-			copy(tmp, cur)
-
-			// add sum to all parent directories
-			for len(tmp) > 0 {
-				dirSums[strings.Join(tmp, "/")] += filesize
-				tmp = tmp[:len(tmp)-1]
-			}
-		} else if line[1] == "cd" {
-			if line[2] == ".." && len(cur) > 1 {
-				cur = cur[:len(cur)-1]
-			} else if line[2] == "/" {
-				cur = []string{"/"}
-			} else {
-				cur = append(cur, line[2])
-				curStr := strings.Join(cur, "/")
+		if line[1] == "cd" {
+			switch line[2] {
+			case "..":
+				path = path[:len(path)-1]
+			case "/":
+				path = []string{"/"}
+			default:
+				path = append(path, line[2])
+				curStr := strings.Join(path, "/")
 
 				if _, ok := dirSums[curStr]; !ok {
 					dirSums[curStr] = 0
 				}
 			}
+		} else if line[1] == "ls" {
+			continue
+		} else {
+			filesize, _ := strconv.Atoi(line[0])
+			tmp := make([]string, len(path))
+			copy(tmp, path)
+
+			appendParentSums(&dirSums, tmp, filesize)
 		}
 	}
 
 	const limitA = 100000
 	limitB := 30_000_000 - (70_000_000 - dirSums["/"])
 	smallest := 70_000_000
-	total := 0
+	totalOver := 0
 
 	for _, size := range dirSums {
 		if size <= limitA {
-			total += size
+			totalOver += size
 		}
 
 		if size >= limitB && size < smallest {
@@ -58,7 +65,7 @@ func solve() (int, int) {
 		}
 	}
 
-	return total, smallest
+	return totalOver, smallest
 }
 
 func main() {

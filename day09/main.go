@@ -19,17 +19,17 @@ func (p1 *Point) add(p2 Point) Point {
 }
 
 func (tail *Point) follow(head Point) Point {
-	x_diff := head.X - tail.X
-	y_diff := head.Y - tail.Y
+	xDiff := head.X - tail.X
+	yDiff := head.Y - tail.Y
 
-	if math.Abs(float64(x_diff)) <= 1 && math.Abs(float64(y_diff)) <= 1 {
+	if math.Abs(float64(xDiff)) <= 1 && math.Abs(float64(yDiff)) <= 1 {
 		return *tail
-	} else if math.Abs(float64(x_diff)) > 1 && math.Abs(float64(y_diff)) > 1 {
-		return Point{tail.X + sign(x_diff), tail.Y + sign(y_diff)}
-	} else if math.Abs(float64(x_diff)) > 1 {
-		return Point{tail.X + sign(x_diff), head.Y}
+	} else if math.Abs(float64(xDiff)) > 1 && math.Abs(float64(yDiff)) > 1 {
+		return Point{tail.X + sign(xDiff), tail.Y + sign(yDiff)}
+	} else if math.Abs(float64(xDiff)) > 1 {
+		return Point{tail.X + sign(xDiff), head.Y}
 	} else {
-		return Point{head.X, tail.Y + sign(y_diff)}
+		return Point{head.X, tail.Y + sign(yDiff)}
 	}
 }
 
@@ -77,7 +77,7 @@ func solve() (int, int) {
 }
 
 func main() {
-	result_a, result_b := solve()
-	fmt.Printf("A: %d\nB: %d\n", result_a, result_b)
+	resultA, resultB := solve()
+	fmt.Printf("A: %d\nB: %d\n", resultA, resultB)
 
 }

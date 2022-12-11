@@ -74,6 +74,6 @@ func solve() (string, string) {
 }
 
 func main() {
-	result_a, result_b := solve()
-	fmt.Printf("A: %s\nB: %s\n", result_a, result_b)
+	resultA, resultB := solve()
+	fmt.Printf("A: %s\nB: %s\n", resultA, resultB)
 }
